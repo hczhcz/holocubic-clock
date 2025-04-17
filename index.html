@@ -162,9 +162,11 @@
                 {
                     // weather today
 
+                    const weatherDay = weatherCache.forecast.forecastday[0].day;
+
                     const vm = weatherCache.current.temp_c.toFixed(1);
-                    const vt = weatherCache.forecast.forecastday[0].day.maxtemp_c.toFixed(1);
-                    const vb = weatherCache.forecast.forecastday[0].day.mintemp_c.toFixed(1);
+                    const vt = weatherDay.maxtemp_c.toFixed(1);
+                    const vb = weatherDay.mintemp_c.toFixed(1);
                     const x = 3 * size / 10;
                     const ym = 4 * size / 5;
                     const yt = 11 * size / 15;
@@ -181,13 +183,16 @@
                     for (let j = 0; j < 4; ++j) {
                         // weather forecast
 
-                        const v = Math.round(weatherCache.forecast.forecastday[i].hour[3 * j + 9].temp_c);
+                        const weatherHour = weatherCache.forecast.forecastday[i].hour[3 * j + 9];
+
+                        const v = Math.round(weatherHour.temp_c);
                         const x = [21, 23, 25, 27][j] * size / 30;
                         const y = [35, 37][i] * size / 45;
                         const sizev = size / 20;
-                        const l = 100 - 0.6 * weatherCache.forecast.forecastday[i].hour[3 * j + 9].chance_of_rain;
+                        const weightv = 300 + 1.5 * weatherHour.chance_of_rain;
+                        const l = 100 - 0.6 * weatherHour.chance_of_rain;
 
-                        elements.push(`<text x="${x}" y="${y}" style="dominant-baseline: central; text-anchor: end; font-family: 'Noto Sans'; font-size: ${sizev}; font-weight: 300; fill: hsl(210, 100%, ${l}%)">${v}</text>`);
+                        elements.push(`<text x="${x}" y="${y}" style="dominant-baseline: central; text-anchor: end; font-family: 'Noto Sans'; font-size: ${sizev}; font-weight: ${weightv}; fill: hsl(210, 100%, ${l}%)">${v}</text>`);
                     }
 
                     const v = weatherCache.forecast.forecastday[i].date.slice(5);
